@@ -4,10 +4,11 @@ import com.imt.framework.web.tuto.entities.Livre;
 import com.imt.framework.web.tuto.repositories.LivreRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 import java.util.Optional;
 
 @Path("/books")
@@ -18,11 +19,17 @@ public class LivreResource {
 
     @GET
     @Produces("application/json")
-    public List<Livre> getBooks(@QueryParam("maxPrice") final Double maxPrice){
+    public Response getBooks(@QueryParam("maxPrice") final Double maxPrice){
         if(maxPrice != null){
-            return livreRepository.getBooksWithMaxPrice(maxPrice);
+            return Response.ok()
+            .entity(livreRepository.getBooksWithMaxPrice(maxPrice))
+            .header("Access-Control-Allow-Origin", "*")
+            .build();
         }
-        return livreRepository.findAll();
+        return Response.ok()
+               .entity(livreRepository.findAll())
+               .header("Access-Control-Allow-Origin", "*")
+               .build();
     }
 
     @POST
